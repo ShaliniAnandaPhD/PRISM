@@ -4,7 +4,7 @@
 # pRISM  
 **Procedural Intelligence & RAG-based Semantic Multi-Model**
 
-pRISM is a research-focused repository demonstrating how **Retrieval-Augmented Generation (RAG)** workflows can integrate outputs from multiple language models (Mistral, Claude 3.5, and OpenAI) to create procedural documents and conduct advanced AI-driven tasks. It includes consensus techniques, **LoRA fine-tuning**, and **Explainable AI** for transparency and optimization.
+pRISM is a research-focused repository demonstrating how **Retrieval-Augmented Generation (RAG)** workflows can integrate outputs from multiple language models (Mistral, Claude 3.5, and OpenAI) to create procedural documents in the legal field and conduct advanced AI-driven tasks. It includes consensus techniques, **LoRA fine-tuning**, and **Explainable AI** for transparency and optimization.
 
 > **Note**: This repository is for research and demonstration purposes only. No real-world or proprietary data is included.
 
