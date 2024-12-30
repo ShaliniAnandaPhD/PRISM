@@ -1,4 +1,4 @@
-(GitHub under construction )
+(The project is ongoing and updates will be made going into January 2025 )
 
 
 # pRISM  
