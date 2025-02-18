@@ -1,87 +1,62 @@
 (The project is ongoing and updates will be made going into January 2025 )
 
+# pRISM
+*Procedural Intelligence & RAG-based Semantic Multi-Model*
 
-# pRISM  
-**Procedural Intelligence & RAG-based Semantic Multi-Model**
+pRISM combines RAG (Retrieval-Augmented Generation) with multi-model consensus to create more reliable AI outputs, specifically designed for legal document processing. By integrating multiple language models and incorporating human expert feedback, we aim to make AI-generated legal content more transparent and trustworthy.
 
-pRISM is a research-focused repository demonstrating how **Retrieval-Augmented Generation (RAG)** workflows can integrate outputs from multiple language models (e.g., OpenAI) to create procedural documents in the legal field and conduct advanced AI-driven tasks. It includes consensus techniques, **LoRA fine-tuning**, and **Explainable AI** for transparency and optimization.
+> **Note**: This is a research project - please don't use it for actual legal work without expert review!
 
-> **Note**: This repository is for research and demonstration purposes only. No real-world or proprietary data is included.
+## What Makes pRISM Different?
 
+- **Multi-Model Consensus**: Instead of relying on a single LLM, we aggregate outputs from multiple models using techniques like weighted majority voting. In our testing, this has significantly reduced hallucination rates (full benchmarks coming soon).
 
-## Features  
+- **Domain-Specific Fine-Tuning**: We use LoRA to adapt models for legal tasks without breaking the bank on compute costs. Our initial tests show promising improvements in legal terminology accuracy.
 
-- **Multi-Model Integration**: Aggregates results from OpenAI and retrieval models for robust, high-quality outputs.  
-- **Consensus Algorithms**: Implements methods like Weighted Majority Voting and Bayesian Model Averaging.  
-- **RAG Workflow**: Uses vector-based retrieval for enhanced AI-generated outputs.  
-- **LoRA Fine-Tuning**: Enables task-specific model adaptation with minimal resources.  
-- **Explainable AI**: Visualizes how retrieved context and model contributions shape decisions.
+- **Human-in-the-Loop**: Legal experts review outputs and provide feedback, which gets incorporated back into the system to improve future results.
 
-## Installation  
+## Quick Start
 
-1. Clone the repository:  
-   
-   ```bash
-   git clone https://github.com/your-repo/pRISM.git
-   cd pRISM
-   ```
+1. Clone and install:
+```bash
+git clone https://github.com/your-repo/pRISM.git
+cd pRISM
+pip install -r requirements.txt
+```
 
-2. Install dependencies:  
-   
-   ```bash
-   pip install -r requirements.txt
-   ```
+## Core Components
+
+### RAG Pipeline (`rag_pipeline.py`)
+The heart of pRISM. Handles document retrieval and generation using FAISS for vector search and LangChain for orchestration. Check out `examples/rag_demo.py` for a simple use case.
+
+### Real-Time API (`real_time_inference_api.py`)
+FastAPI service for running inferences. Currently supports:
+- Basic document queries
+- Multi-model consensus outputs
+- Confidence scoring
+- Explanation generation
+
+### Evaluation Tools
+- `performance_benchmarking.py`: Measures latency and accuracy
+- `evaluation_report_generator.py`: Generates detailed PDF reports
+- `automated_feedback_loops.py`: Incorporates user feedback for continuous improvement
+
+## Roadmap (2025)
+- [ ] Add support for more recent model versions
+- [ ] Improve consensus algorithms based on early testing
+- [ ] Release benchmark results comparing single vs multi-model accuracy
+- [ ] Add more detailed legal domain examples
+
+## Contributing
+This is a research project and we'd love your input! Feel free to open issues or PRs, especially if you have experience with:
+- Legal document processing
+- RAG implementations
+- Model fine-tuning
+- Evaluation methodologies
+
+## License
+MIT License - see LICENSE.md
 
 ---
+Built with 💡 for exploring better ways to handle legal AI
 
-## Usage  
-
-### Key Scripts  
-
-#### **1. LoRA Fine-Tuning**
-**Script**: `scripts/lora_fine_tuning.py`  
-This script demonstrates the application of **Low-Rank Adaptation (LoRA)** by:
-- Fine-tuning pre-trained models for specific procedural tasks without retraining the entire model.
-- Adapting models for domain-specific applications, such as legal or technical document drafting, using minimal computational resources.
-
-#### **2. RAG Pipeline**
-**Script**: `scripts/rag_pipeline.py`  
-This script implements the complete **Retrieval-Augmented Generation (RAG)** pipeline by:
-- Integrating vector retrieval with FAISS and embedding models.
-- Using language models (e.g., OpenAI) to generate responses based on retrieved context.
-- Supporting efficient query-based document retrieval and response generation.
-
-#### **3. Real-Time Inference API**
-**Script**: `scripts/real_time_inference_api.py`  
-This script creates a FastAPI-based service for real-time inference by:
-- Serving real-time Retrieval-Augmented Generation (RAG) queries via RESTful endpoints.
-- Integrating LangChain with FAISS for vector-based retrieval.
-- Providing robust query handling and response generation capabilities.
-
-#### **4. Performance Benchmarking**
-**Script**: `scripts/performance_benchmarking.py`  
-This script benchmarks the RAG pipeline by:
-- Measuring latency for query processing.
-- Evaluating accuracy against predefined expected outputs.
-- Assessing consensus reliability across retrieved documents.
-
-#### **5. Evaluation Report Generator**
-**Script**: `scripts/evaluation_report_generator.py`  
-This script automates report generation by:
-- Summarizing latency, accuracy, and consensus reliability results.
-- Generating PDF reports with key insights and metrics.
-
-#### **6. Automated Feedback Loops**
-**Script**: `scripts/automated_feedback_loops.py`  
-This script implements dynamic feedback collection and improvement by:
-- Allowing users to provide feedback on generated responses.
-- Refining vector stores based on positive feedback to improve retrieval.
-- Dynamically updating pipeline outputs based on iterative feedback.
-
-These scripts collectively implement the core functionality of pRISM, ensuring efficient data preparation, robust model evaluation, dynamic real-time inference, and domain-specific optimization.  
-
-## License  
-
-This project is licensed under the [MIT License](./LICENSE).  
-
-**Disclaimer**: This repository is for research and demonstration purposes only. Always review AI-generated outputs with domain experts before applying them in real-world scenarios.
