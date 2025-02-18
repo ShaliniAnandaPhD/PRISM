@@ -27,7 +27,7 @@ pip install -r requirements.txt
 ## Core Components
 
 ### RAG Pipeline (`rag_pipeline.py`)
-The heart of pRISM. Handles document retrieval and generation using FAISS for vector search and LangChain for orchestration. Check out `examples/rag_demo.py` for a simple use case.
+The heart of pRISM. Handles document retrieval and generation using FAISS for vector search and LangChain for orchestration. 
 
 ### Real-Time API (`real_time_inference_api.py`)
 FastAPI service for running inferences. Currently supports:
