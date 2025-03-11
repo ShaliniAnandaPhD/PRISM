@@ -1,0 +1,287 @@
+# PRISM - AI Models Configuration
+# Transcription models
+transcription:
+  whisper-large-v3:
+    type: "openai-whisper"
+    path: "models/whisper/whisper-large-v3"
+    description: "OpenAI Whisper Large v3 for multi-speaker transcription"
+    parameters:
+      beam_size: 5
+      language: "en"
+      task: "transcribe"
+      fp16: true
+      compute_wer: true
+    memory_requirements: 
+      gpu: 8000  # MB
+      cpu: 16000  # MB
+    performance:
+      speed: 0.5  # Realtime factor
+      wer: 0.035  # Word Error Rate on benchmark
+
+# Speaker identification models
+speaker_identification:
+  ECAPA-TDNN:
+    type: "speaker-embedding"
+    path: "models/speaker_id/ECAPA-TDNN-v2"
+    description: "ECAPA-TDNN speaker embedding model"
+    parameters:
+      min_confidence: 0.7
+      embedding_size: 192
+      sample_rate: 16000
+    memory_requirements:
+      gpu: 2000  # MB
+      cpu: 4000  # MB
+    performance:
+      equal_error_rate: 0.01
+      speaker_accuracy: 0.972
+
+  pyannote-audio:
+    type: "diarization"
+    path: "models/speaker_id/pyannote-audio-v2.1.1"
+    description: "Pyannote.Audio speaker diarization pipeline"
+    parameters:
+      segmentation_threshold: 0.5
+      clustering_threshold: 0.75
+      min_duration: 0.5
+    memory_requirements:
+      gpu: 4000  # MB
+      cpu: 8000  # MB
+    performance:
+      diarization_error_rate: 0.04
+
+# Emotion detection models
+emotion_detection:
+  Wav2Vec2-XLSR:
+    type: "wav2vec"
+    path: "models/emotion/wav2vec2-xlsr"
+    description: "Wav2Vec2-XLSR model fine-tuned for emotion recognition"
+    parameters:
+      sample_rate: 16000
+      num_emotions: 14
+      threshold: 0.5
+    memory_requirements:
+      gpu: 3000  # MB
+      cpu: 6000  # MB
+    performance:
+      emotion_accuracy: 0.83
+      
+  SER-T:
+    type: "transformer"
+    path: "models/emotion/ser-t"
+    description: "Speech Emotion Recognition Transformer"
+    parameters:
+      sample_rate: 16000
+      context_window: 5  # seconds
+      threshold: 0.6
+    memory_requirements:
+      gpu: 4000  # MB
+      cpu: 8000  # MB
+    performance:
+      emotion_accuracy: 0.87
+
+# Vocal stress analysis models
+vocal_stress:
+  VSAnalyzer:
+    type: "acoustic-features"
+    path: "models/stress/vsanalyzer-v3.2"
+    description: "Vocal Stress Analysis Framework"
+    parameters:
+      sample_rate: 16000
+      features: ["jitter", "shimmer", "hnr", "mfcc", "f0", "intensity", "spectral"]
+      baseline_required: true
+    memory_requirements:
+      gpu: 1000  # MB
+      cpu: 2000  # MB
+    performance:
+      stress_detection_accuracy: 0.79
+
+# Object detection models
+object_detection:
+  YOLOv5-X:
+    type: "yolo"
+    path: "models/object/yolov5x"
+    description: "YOLOv5-X object detection model"
+    parameters:
+      confidence_threshold: 0.4
+      nms_threshold: 0.45
+      image_size: 640
+    memory_requirements:
+      gpu: 6000  # MB
+      cpu: 12000  # MB
+    performance:
+      map50: 0.68
+      map50_95: 0.504
+
+  DeepSort:
+    type: "tracking"
+    path: "models/tracking/deepsort"
+    description: "DeepSORT for multi-object tracking"
+    parameters:
+      max_age: 30
+      n_init: 3
+      max_iou_distance: 0.7
+    memory_requirements:
+      gpu: 2000  # MB
+      cpu: 4000  # MB
+    performance:
+      mota: 0.76  # Multi-Object Tracking Accuracy
+
+# Face recognition models
+face_recognition:
+  FaceNet:
+    type: "face-embedding"
+    path: "models/face/facenet"
+    description: "FaceNet face recognition model"
+    parameters:
+      min_face_size: 20
+      threshold: 0.7
+      embedding_size: 512
+    memory_requirements:
+      gpu: 2000  # MB
+      cpu: 4000  # MB
+    performance:
+      verification_accuracy: 0.996
+
+  MTCNN:
+    type: "face-detection"
+    path: "models/face/mtcnn"
+    description: "MTCNN face detection model"
+    parameters:
+      min_face_size: 20
+      thresholds: [0.6, 0.7, 0.7]
+    memory_requirements:
+      gpu: 1000  # MB
+      cpu: 2000  # MB
+    performance:
+      detection_accuracy: 0.98
+
+# Action recognition models
+action_recognition:
+  I3D:
+    type: "i3d"
+    path: "models/action/i3d"
+    description: "I3D for action recognition"
+    parameters:
+      frame_rate: 25
+      clip_duration: 2.0
+      num_classes: 400
+    memory_requirements:
+      gpu: 5000  # MB
+      cpu: 10000  # MB
+    performance:
+      action_accuracy: 0.78
+
+  SlowFast:
+    type: "slowfast"
+    path: "models/action/slowfast"
+    description: "SlowFast for temporal action localization"
+    parameters:
+      alpha: 8
+      beta: 1/8
+      num_classes: 400
+    memory_requirements:
+      gpu: 6000  # MB
+      cpu: 12000  # MB
+    performance:
+      action_accuracy: 0.82
+
+  ARID:
+    type: "incident-recognition"
+    path: "models/incident/arid"
+    description: "Action Recognition for Incident Detection"
+    parameters:
+      incident_threshold: 0.7
+      temporal_window: 10  # seconds
+      num_incident_types: 24
+    memory_requirements:
+      gpu: 5000  # MB
+      cpu: 10000  # MB
+    performance:
+      incident_detection_accuracy: 0.91
+
+  VIBE:
+    type: "pose-estimation"
+    path: "models/pose/vibe"
+    description: "VIBE for human pose estimation and tracking"
+    parameters:
+      seq_len: 16
+      hidden_size: 1024
+    memory_requirements:
+      gpu: 4000  # MB
+      cpu: 8000  # MB
+    performance:
+      mpjpe: 65.6  # Mean Per Joint Position Error in mm
+
+# Text analysis models
+text_analysis:
+  SBERT:
+    type: "embedding"
+    path: "models/text/sbert"
+    description: "Sentence-BERT for semantic embeddings"
+    parameters:
+      max_seq_length: 128
+      embedding_size: 768
+    memory_requirements:
+      gpu: 2000  # MB
+      cpu: 4000  # MB
+    performance:
+      semantic_similarity_correlation: 0.85
+
+  T5-large:
+    type: "seq2seq"
+    path: "models/text/t5-large"
+    description: "T5-large for text generation and understanding"
+    parameters:
+      max_seq_length: 512
+      beam_size: 4
+    memory_requirements:
+      gpu: 8000  # MB
+      cpu: 16000  # MB
+    performance:
+      generation_bleu: 0.42
+
+# Relationship modeling
+relationship_modeling:
+  GraphSAGE:
+    type: "graph-neural-network"
+    path: "models/graph/graphsage"
+    description: "GraphSAGE for evidence relationship modeling"
+    parameters:
+      hidden_size: 256
+      num_layers: 3
+      dropout: 0.2
+    memory_requirements:
+      gpu: 3000  # MB
+      cpu: 6000  # MB
+    performance:
+      link_prediction_accuracy: 0.87
+
+# Legal models
+legal_models:
+  LegalPatternNet:
+    type: "legal-pattern"
+    path: "models/legal/legalpatternnet"
+    description: "Legal Pattern Recognition Network for threat pattern recognition"
+    parameters:
+      num_patterns: 46
+      jurisdictions: ["CA", "NY", "TX", "FL", "IL"]
+      threshold: 0.7
+    memory_requirements:
+      gpu: 2000  # MB
+      cpu: 4000  # MB
+    performance:
+      pattern_match_accuracy: 0.92
+
+  LegalT5:
+    type: "legal-text"
+    path: "models/legal/legal-t5"
+    description: "T5 model fine-tuned for legal text generation"
+    parameters:
+      max_seq_length: 512
+      beam_size: 4
+      jurisdictions: ["CA", "NY", "TX", "FL", "IL"]
+    memory_requirements:
+      gpu: 8000  # MB
+      cpu: 16000  # MB
+    performance:
+      legal_text_accuracy: 0.88
