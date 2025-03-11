@@ -1,0 +1,172 @@
+# PRISM - Main Configuration
+# System configuration
+system:
+  name: "PRISM"
+  version: "3.4.2.128"
+  description: "Protection-order Resource for Integrated Scanning and Management"
+  log_level: "INFO"
+  temp_dir: "/tmp/prism"
+  max_threads: 8
+  gpu_enabled: true
+
+# File paths
+paths:
+  models_dir: "models"
+  templates_dir: "templates"
+  logs_dir: "logs"
+  cache_dir: "cache"
+  default_evidence_dir: "evidence"
+  default_analysis_dir: "analysis"
+  default_filings_dir: "filings"
+  default_exhibits_dir: "court-exhibits"
+
+# Evidence management
+evidence:
+  allowed_extensions:
+    audio: [".wav", ".mp3", ".m4a", ".aac", ".flac", ".ogg"]
+    video: [".mp4", ".mov", ".avi", ".mkv", ".wmv", ".flv"]
+    image: [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff"]
+    document: [".pdf", ".doc", ".docx", ".txt", ".rtf", ".odt"]
+    message: [".csv", ".txt", ".json", ".xml"]
+  chain_of_custody:
+    enabled_by_default: true
+    hash_algorithm: "sha256"
+    metadata_extraction: true
+
+# Audio analysis
+audio:
+  transcription:
+    default_model: "whisper-large-v3"
+    language: "en"
+    compute_wer: true
+    speaker_diarization: true
+  speaker_id:
+    default_model: "ECAPA-TDNN"
+    min_confidence: 0.7
+    reference_samples_dir: "reference/voice_samples"
+  emotion_detection:
+    default_model: "Wav2Vec2-XLSR"
+    secondary_model: "SER-T"
+    emotion_classes: ["neutral", "happy", "sad", "angry", "fearful", "disgusted", "surprised", "threatening", "pleading", "nervous", "agitated", "contempt", "distress", "urgency"]
+  vocal_stress:
+    default_model: "VSAnalyzer"
+    baseline_establishment: true
+    micro_tremor_detection: true
+  enhancement:
+    noise_reduction: true
+    volume_normalization: true
+    default_target_snr: 25
+
+# Video analysis
+video:
+  technical:
+    validate_container: true
+    validate_frames: true
+    validate_timestamps: true
+    validate_metadata: true
+    check_for_manipulation: true
+  object_detection:
+    default_model: "YOLOv5-X"
+    confidence_threshold: 0.4
+    nms_threshold: 0.45
+    classes_of_interest: ["person", "car", "truck", "motorbike", "bicycle", "knife", "scissors", "bottle", "cell phone", "backpack"]
+  facial_recognition:
+    default_model: "FaceNet"
+    min_face_size: 20
+    min_confidence: 0.7
+    reference_samples_dir: "reference/face_samples"
+  action_recognition:
+    default_model: "SlowFast"
+    secondary_model: "I3D"
+    incident_detection_model: "ARID"
+    pose_estimation_model: "VIBE"
+  enhancement:
+    contrast_enhancement: true
+    stabilization: true
+    noise_reduction: true
+    deblurring: true
+    upscaling: false
+
+# Evidence correlation
+correlation:
+  default_threshold: 0.7
+  timeline_resolution: "minute"
+  semantic_model: "T5-large"
+  embedding_model: "SBERT"
+  graph_model: "GraphSAGE"
+  relationship_types:
+    - "temporal_proximity"
+    - "spatial_proximity"
+    - "semantic_similarity"
+    - "causal_relationship"
+    - "same_incident"
+    - "same_entities"
+
+# Legal templates
+legal:
+  jurisdictions:
+    CA:
+      name: "California"
+      template_dir: "templates/jurisdictions/CA"
+      default_court: "los-angeles-superior"
+      legal_references:
+        - "Cal Family Code § 6200-6219"
+        - "Cal Family Code § 6320-6327"
+        - "Cal Family Code § 6380-6389"
+    NY:
+      name: "New York"
+      template_dir: "templates/jurisdictions/NY"
+      default_court: "ny-supreme"
+      legal_references:
+        - "NY Family Court Act § 812"
+        - "NY Family Court Act § 821-828"
+        - "NY Family Court Act § 841-847"
+    TX:
+      name: "Texas"
+      template_dir: "templates/jurisdictions/TX"
+      default_court: "tx-district"
+      legal_references:
+        - "Texas Family Code § 71.001-71.007"
+        - "Texas Family Code § 82.001-82.009"
+        - "Texas Family Code § 83.001-83.006"
+  forms:
+    CA:
+      - "DV-100"
+      - "DV-101"
+      - "DV-109"
+      - "DV-110"
+      - "CLETS-001"
+      - "MC-031"
+      - "MC-025"
+
+# Document generation
+documents:
+  default_format: "PDF"
+  court_standards:
+    font: "Times New Roman"
+    font_size: 12
+    margins: [1.0, 1.0, 1.0, 1.0]  # [top, right, bottom, left] in inches
+    line_spacing: 2.0
+    paragraph_spacing: 0.5
+  pdf:
+    pdf_a_compliant: true
+    bookmarks_enabled: true
+    metadata_enabled: true
+    security_enabled: true
+
+# Case management
+case_management:
+  case_folder_structure:
+    - "evidence/audio"
+    - "evidence/video"
+    - "evidence/documents"
+    - "evidence/images"
+    - "evidence/messages"
+    - "evidence/metadata"
+    - "analysis"
+    - "legal-research"
+    - "filings"
+    - "court-exhibits"
+    - "logs/analysis_logs"
+    - "logs/processing_logs"
+    - "logs/audit_trail"
