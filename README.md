@@ -15,6 +15,12 @@ pRISM combines RAG (Retrieval-Augmented Generation) with multi-model consensus t
 
 - **Human-in-the-Loop**: Legal experts review outputs and provide feedback, which gets incorporated back into the system to improve future results.
 
+## Demos
+
+- [CLI Tool Demo for Prism](https://www.linkedin.com/posts/shalinianandaphd_cli-demo-for-prism-continuation-from-my-activity-7305376243787382784-rdm3)
+- [Evaluations](https://www.linkedin.com/posts/shalinianandaphd_legaltech-accesstojustice-ai-activity-7305289571565518848-xSOX)
+- [Prism: Proactive Retrieval Intelligence - Architecture](https://www.linkedin.com/posts/shalinianandaphd_prism-proactive-retrieval-intelligence-activity-7303428785339543552-UIzc)
+
 ## Quick Start
 
 1. Clone and install:
@@ -40,14 +46,6 @@ FastAPI service for running inferences. Currently supports:
 - `performance_benchmarking.py`: Measures latency and accuracy
 - `evaluation_report_generator.py`: Generates detailed PDF reports
 - `automated_feedback_loops.py`: Incorporates user feedback for continuous improvement
-
-## Demos
-
-CLI Tool : https://www.linkedin.com/posts/shalinianandaphd_cli-demo-for-prism-continuation-from-my-activity-7305376243787382784-rdm3?utm_source=share&utm_medium=member_desktop&rcm=ACoAAATH3cgBLB3ZhNKdiK83PyAA1KPddyaaY2I
-
-Evaluations: https://www.linkedin.com/posts/shalinianandaphd_legaltech-accesstojustice-ai-activity-7305289571565518848-xSOX?utm_source=share&utm_medium=member_desktop&rcm=ACoAAATH3cgBLB3ZhNKdiK83PyAA1KPddyaaY2I
-
-Notion page with architecture: https://www.linkedin.com/posts/shalinianandaphd_prism-proactive-retrieval-intelligence-activity-7303428785339543552-UIzc?utm_source=share&utm_medium=member_desktop&rcm=ACoAAATH3cgBLB3ZhNKdiK83PyAA1KPddyaaY2I
 
 
 
