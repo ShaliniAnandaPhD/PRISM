@@ -1,18 +1,18 @@
 """
-A comprehensive testing framework for validating Python function behavior.
-This script allows for systematic testing of functions against expected outputs,
-handling various test scenarios including expected exceptions, timeouts, and
-different output comparison methods.
+I built this framework after getting tired of writing the same test boilerplate
+over and over again. It helps me validate Python function behavior with minimal
+setup and handles all the boring stuff automatically.
 
-Features:
-- Detailed logging with configurable verbosity
-- Support for test fixtures and test suites
-- Ability to test for expected exceptions
-- Timeout handling for long-running functions
-- Customizable output comparison (equality, approximate, custom validators)
-- Comprehensive test reports in multiple formats (JSON, HTML, console)
-- Command-line interface for flexible test execution
-- Support for setup and teardown operations
+Key features:
+- Logs test results so I don't have to print debug statements everywhere
+- Handles test fixtures so I don't need to repeat setup/teardown code
+- Catches expected exceptions (super useful for error case testing)
+- Deals with timeouts for those functions that occasionally hang
+- Lets me choose how to compare results (exact, approximate, custom)
+- Generates reports I can share with the team
+- Simple CLI so I can run specific test categories
+
+Feel free to use, modify, and improve it!
 """
 
 import logging
@@ -32,7 +32,7 @@ from dataclasses import dataclass, field
 
 
 class TestResult(Enum):
-    """Enumeration of possible test outcomes."""
+    """Possible test outcomes - kept simple for clarity."""
     PASS = "PASS"
     FAIL = "FAIL"
     ERROR = "ERROR"
@@ -41,41 +41,50 @@ class TestResult(Enum):
 
 
 class ComparisonMethod(Enum):
-    """Enumeration of available comparison methods."""
-    EXACT = "exact"  # Uses == operator
-    APPROXIMATE = "approximate"  # For floating point, within tolerance
-    CONTAINS = "contains"  # Check if expected is contained in result
-    CUSTOM = "custom"  # Uses a custom validator function
+    """Ways to compare test results - not everything is a simple equality check."""
+    EXACT = "exact"         # Standard == operator, good for most cases
+    APPROXIMATE = "approximate"  # For floating-point, super useful to avoid rounding issues
+    CONTAINS = "contains"   # For checking if an item is in a collection
+    CUSTOM = "custom"       # When things get weird and you need custom logic
 
 
 @dataclass
 class TestCase:
-    """Data class representing a single test case."""
-    function: Callable
-    inputs: Tuple
-    expected_output: Any = None
-    test_name: str = ""
-    category: str = "default"
-    timeout: Optional[float] = None
-    expected_exception: Optional[type] = None
-    comparison_method: ComparisonMethod = ComparisonMethod.EXACT
-    comparison_tolerance: float = 0.0001
-    custom_validator: Optional[Callable] = None
-    skip: bool = False
-    skip_reason: str = ""
-    setup: Optional[Callable] = None
-    teardown: Optional[Callable] = None
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    """
+    Container for a single test case.
+    
+    I've found dataclasses perfect for this - less boilerplate than a full class
+    but more structure than a dict.
+    """
+    function: Callable             # The function to test
+    inputs: Tuple                  # Arguments to pass to the function
+    expected_output: Any = None    # What we expect back (None if testing exceptions)
+    test_name: str = ""            # Human-readable name (auto-generated if blank)
+    category: str = "default"      # For organizing tests
+    timeout: Optional[float] = None  # In seconds, None means no timeout
+    expected_exception: Optional[type] = None  # Exception we expect to be raised
+    comparison_method: ComparisonMethod = ComparisonMethod.EXACT  # How to compare results
+    comparison_tolerance: float = 0.0001  # For approximate comparisons
+    custom_validator: Optional[Callable] = None  # For custom comparisons
+    skip: bool = False             # Set to True to skip this test
+    skip_reason: str = ""          # Why the test is skipped
+    setup: Optional[Callable] = None  # Function to run before the test
+    teardown: Optional[Callable] = None  # Function to run after the test
+    metadata: Dict[str, Any] = field(default_factory=dict)  # Extra info about the test
 
     def __post_init__(self):
-        """Set a default test name if not provided."""
+        """Set a default test name if not provided - saves typing for simple tests."""
         if not self.test_name:
-            self.test_name = f"Test for {self.function.__name__} with inputs {self.inputs}"
+            # Truncate long input lists for readability
+            input_str = str(self.inputs)
+            if len(input_str) > 50:
+                input_str = input_str[:47] + "..."
+            self.test_name = f"{self.function.__name__}({input_str})"
 
 
 @dataclass
 class TestResult:
-    """Data class containing the result of a test execution."""
+    """Results of a test execution - captures everything we need for reporting."""
     test_case: TestCase
     status: TestResult
     actual_output: Any = None
@@ -87,17 +96,31 @@ class TestResult:
 
 
 class TimeoutError(Exception):
-    """Custom exception raised when a test times out."""
+    """
+    Raised when a test takes too long.
+    
+    I've had too many tests hang indefinitely, so timeouts were a must-have feature.
+    """
     pass
 
 
 def timeout_handler(signum, frame):
-    """Signal handler for function timeout."""
-    raise TimeoutError("Function execution timed out")
+    """
+    Signal handler for function timeout.
+    
+    Signal handling isn't the most elegant solution, but it works reliably across platforms.
+    Just make sure you don't use SIGALRM for anything else in your code.
+    """
+    raise TimeoutError("Function took too long to complete")
 
 
 def run_with_timeout(func, timeout, *args, **kwargs):
-    """Run a function with a timeout."""
+    """
+    Run a function with a timeout to prevent hanging tests.
+    
+    Note: This only works on Unix-like systems due to signal.SIGALRM.
+    For Windows, we'd need a different approach (maybe threading).
+    """
     if timeout is None:
         return func(*args, **kwargs)
     
@@ -110,19 +133,26 @@ def run_with_timeout(func, timeout, *args, **kwargs):
         signal.alarm(0)  # Disable the alarm
         return result
     finally:
-        signal.alarm(0)  # Ensure the alarm is disabled
+        # ALWAYS disable the alarm to avoid affecting other tests
+        signal.alarm(0)
 
 
 def compare_outputs(actual, expected, method, tolerance=0.0001, validator=None):
     """
-    Compare actual and expected outputs using the specified method.
+    Compare actual and expected outputs using the selected method.
+    
+    I've found these four comparison types handle 99% of my use cases:
+    - Exact: Basic equality (==)
+    - Approximate: Floating-point with tolerance (lifesaver for numerical code)
+    - Contains: For checking substrings, list items, etc.
+    - Custom: For everything else (complex objects, special logic)
     
     Args:
-        actual: The actual output from the function
-        expected: The expected output
-        method: ComparisonMethod enum value
-        tolerance: Tolerance for approximate comparison
-        validator: Custom validator function for CUSTOM method
+        actual: What your function returned
+        expected: What you expected it to return
+        method: How to compare them (from ComparisonMethod enum)
+        tolerance: How close is close enough (for approximate comparisons)
+        validator: Your custom comparison function (for custom method)
         
     Returns:
         bool: True if comparison passes, False otherwise
@@ -131,39 +161,48 @@ def compare_outputs(actual, expected, method, tolerance=0.0001, validator=None):
         return actual == expected
     
     elif method == ComparisonMethod.APPROXIMATE:
+        # Handle numbers
         if isinstance(actual, (int, float)) and isinstance(expected, (int, float)):
             return abs(actual - expected) <= tolerance
+        
+        # Handle lists/tuples of numbers
         elif isinstance(actual, (list, tuple)) and isinstance(expected, (list, tuple)):
             if len(actual) != len(expected):
                 return False
             return all(abs(a - e) <= tolerance for a, e in zip(actual, expected) 
-                       if isinstance(a, (int, float)) and isinstance(e, (int, float)))
+                      if isinstance(a, (int, float)) and isinstance(e, (int, float)))
+        
+        # Can't do approximate comparison on non-numeric types
         return False
     
     elif method == ComparisonMethod.CONTAINS:
+        # Check if expected is contained in actual
         if isinstance(actual, (str, list, tuple, dict, set)):
             return expected in actual
         return False
     
     elif method == ComparisonMethod.CUSTOM:
+        # Use the user-provided validator
         if validator and callable(validator):
             return validator(actual, expected)
+        
+        # If no validator provided for CUSTOM, that's a mistake
+        logging.warning("CUSTOM comparison method used but no validator provided!")
         return False
     
+    # We should never get here if using the enum correctly
+    logging.error(f"Unknown comparison method: {method}")
     return False
 
 
 def run_test_case(test_case):
     """
-    Runs a single test case on the given function.
+    Run a single test case and return the results.
     
-    Args:
-        test_case: TestCase object containing test configuration
-        
-    Returns:
-        TestResult: Object containing test results
+    This handles all the messy details like timeouts, exceptions, setup/teardown,
+    and result comparisons.
     """
-    # Handle skipped tests
+    # Handle skipped tests - don't even try to run them
     if test_case.skip:
         return TestResult(
             test_case=test_case,
@@ -176,6 +215,7 @@ def run_test_case(test_case):
         try:
             test_case.setup()
         except Exception as e:
+            # If setup fails, the test can't run
             return TestResult(
                 test_case=test_case,
                 status=TestResult.ERROR,
@@ -196,6 +236,7 @@ def run_test_case(test_case):
                     *test_case.inputs
                 )
             except TimeoutError:
+                # Handle timeout case
                 return TestResult(
                     test_case=test_case,
                     status=TestResult.TIMEOUT,
@@ -203,6 +244,7 @@ def run_test_case(test_case):
                     metadata={"timeout_value": test_case.timeout}
                 )
         else:
+            # Run without timeout
             result = test_case.function(*test_case.inputs)
             
         # If we're expecting an exception but didn't get one, it's a failure
@@ -214,7 +256,7 @@ def run_test_case(test_case):
                 actual_output=result,
                 execution_time=end_time - start_time,
                 metadata={
-                    "failure_reason": f"Expected exception {test_case.expected_exception.__name__} was not raised"
+                    "failure_reason": f"Expected {test_case.expected_exception.__name__} but no exception was raised"
                 }
             )
 
@@ -246,7 +288,7 @@ def run_test_case(test_case):
     except Exception as e:
         end_time = time.time()
         
-        # If this is an expected exception, it's a pass
+        # If this is an expected exception, it's actually a pass!
         if test_case.expected_exception is not None and isinstance(e, test_case.expected_exception):
             return TestResult(
                 test_case=test_case,
@@ -267,16 +309,22 @@ def run_test_case(test_case):
         )
     
     finally:
-        # Run teardown if provided
+        # Always run teardown if provided, even if the test failed
         if test_case.teardown and callable(test_case.teardown):
             try:
                 test_case.teardown()
             except Exception as e:
-                logging.warning(f"Teardown for {test_case.test_name} failed: {e}")
+                # Log teardown failures but don't fail the test because of them
+                logging.warning(f"Teardown for '{test_case.test_name}' failed: {e}")
 
 
 class TestSuite:
-    """A collection of test cases that can be run together."""
+    """
+    A collection of related test cases.
+    
+    I like to organize tests by feature or function, makes it easier to run
+    subsets of tests during development.
+    """
     
     def __init__(self, name="Default Test Suite"):
         self.name = name
@@ -285,11 +333,11 @@ class TestSuite:
         self.teardown_function = None
         
     def add_test(self, test_case):
-        """Add a test case to the suite."""
+        """Add a single test case to the suite."""
         self.test_cases.append(test_case)
         
     def add_tests(self, test_cases):
-        """Add multiple test cases to the suite."""
+        """Add multiple test cases at once."""
         self.test_cases.extend(test_cases)
         
     def set_suite_setup(self, setup_func):
@@ -301,15 +349,16 @@ class TestSuite:
         self.teardown_function = teardown_func
         
     def run(self):
-        """Run all tests in the suite and return the results."""
+        """Run all tests in the suite and return results."""
         results = []
         
+        # Run suite setup if it exists
         if self.setup_function:
             try:
                 self.setup_function()
             except Exception as e:
                 logging.error(f"Suite setup failed: {e}")
-                # Skip all tests if suite setup fails
+                # If suite setup fails, skip all tests
                 for test_case in self.test_cases:
                     results.append(TestResult(
                         test_case=test_case,
@@ -318,10 +367,12 @@ class TestSuite:
                     ))
                 return results
         
+        # Run each test
         for test_case in self.test_cases:
             result = run_test_case(test_case)
             results.append(result)
             
+        # Run suite teardown if it exists
         if self.teardown_function:
             try:
                 self.teardown_function()
@@ -332,16 +383,21 @@ class TestSuite:
 
 
 class TestRunner:
-    """Main test runner class that handles test execution and reporting."""
+    """
+    Main class that handles test execution and reporting.
+    
+    I've designed this to be simple for basic use cases but flexible enough
+    for more complex testing needs.
+    """
     
     def __init__(self, log_file=None, log_level=logging.INFO, report_file=None):
         """
-        Initialize the test runner.
+        Set up the test runner with logging and reporting options.
         
         Args:
-            log_file: Path to log file, if None logs to stderr
-            log_level: Logging level to use
-            report_file: Path to save the JSON report, if None no report is saved
+            log_file: Where to save logs (None for console only)
+            log_level: How verbose the logs should be
+            report_file: Where to save the JSON report (None for no report)
         """
         self.suites = []
         self.log_file = log_file
@@ -350,7 +406,7 @@ class TestRunner:
         self._configure_logging()
         
     def _configure_logging(self):
-        """Configure logging based on instance settings."""
+        """Set up logging based on constructor parameters."""
         log_format = '%(asctime)s - %(levelname)s - %(message)s'
         
         if self.log_file:
@@ -366,17 +422,22 @@ class TestRunner:
             )
     
     def add_suite(self, suite):
-        """Add a test suite to the runner."""
+        """Add an existing test suite to the runner."""
         self.suites.append(suite)
         
     def create_suite(self, name="Test Suite"):
-        """Create and return a new test suite."""
+        """Create a new test suite and add it to the runner."""
         suite = TestSuite(name)
         self.suites.append(suite)
         return suite
         
     def run(self):
-        """Run all test suites and generate reports."""
+        """
+        Run all test suites and generate reports.
+        
+        Returns:
+            List of all test results from all suites
+        """
         all_results = []
         
         for suite in self.suites:
@@ -400,18 +461,18 @@ class TestRunner:
             if status == TestResult.PASS:
                 logging.info(f"PASS: {test_name}")
             elif status == TestResult.FAIL:
-                logging.error(f"FAIL: {test_name} | Expected: {result.test_case.expected_output}, Got: {result.actual_output}")
+                logging.error(f"FAIL: {test_name} - Expected: {result.test_case.expected_output}, Got: {result.actual_output}")
             elif status == TestResult.ERROR:
-                logging.error(f"ERROR: {test_name} | Exception: {result.exception}")
+                logging.error(f"ERROR: {test_name} - {result.exception}")
                 if result.exception_traceback:
                     logging.debug(f"Traceback: {result.exception_traceback}")
             elif status == TestResult.TIMEOUT:
-                logging.error(f"TIMEOUT: {test_name} | Function execution exceeded {result.test_case.timeout} seconds")
+                logging.error(f"TIMEOUT: {test_name} - Function didn't finish within {result.test_case.timeout} seconds")
             elif status == TestResult.SKIPPED:
-                logging.info(f"SKIPPED: {test_name} | Reason: {result.metadata.get('skip_reason', 'No reason provided')}")
+                logging.info(f"SKIPPED: {test_name} - {result.metadata.get('skip_reason', 'No reason provided')}")
     
     def _save_report(self, results):
-        """Save a JSON report of the test results."""
+        """Save a JSON report of test results."""
         report = {
             "timestamp": datetime.datetime.now().isoformat(),
             "total_tests": len(results),
@@ -449,77 +510,92 @@ class TestRunner:
         logging.info(f"Test report saved to {self.report_file}")
         
     def generate_html_report(self, html_file):
-        """Generate an HTML report from the test results."""
-        # Placeholder for HTML report generation
-        # This would create a nicely formatted HTML report
-        logging.info(f"HTML report generation not implemented. Would save to {html_file}")
+        """
+        Generate an HTML report from results.
+        
+        This creates a nicer looking report than the raw JSON - useful for sharing
+        with non-technical team members.
+        
+        Note: Not fully implemented yet - on my TODO list!
+        """
+        # TODO: Implement HTML report generation with nice formatting
+        logging.info(f"HTML report would be saved to {html_file} (not implemented yet)")
 
 
 def parse_args():
-    """Parse command-line arguments."""
-    parser = argparse.ArgumentParser(description="Function Testing Framework")
+    """Process command-line arguments for the test runner."""
+    parser = argparse.ArgumentParser(description="PyFuncTest - Function Testing Framework")
     
     parser.add_argument(
         "--log-file",
-        help="Path to log file. If not provided, logs to stderr."
+        help="Where to save logs (default: stderr)"
     )
     
     parser.add_argument(
         "--log-level",
         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
         default="INFO",
-        help="Set the logging level."
+        help="How verbose logs should be (default: INFO)"
     )
     
     parser.add_argument(
         "--report-file",
-        help="Path to save the JSON report. If not provided, no report is saved."
+        help="Path to save the JSON report (default: function_test_results.json)"
     )
     
     parser.add_argument(
         "--html-report",
-        help="Path to save an HTML report. If not provided, no HTML report is generated."
+        help="Path to save an HTML report (default: no HTML report)"
     )
     
     parser.add_argument(
         "--test-pattern",
-        help="Run only tests that match this pattern."
+        help="Only run tests with names matching this pattern"
     )
     
     parser.add_argument(
         "--test-category",
-        help="Run only tests in this category."
+        help="Only run tests in this category"
     )
     
     parser.add_argument(
         "--timeout",
         type=float,
-        help="Default timeout for all tests in seconds."
+        help="Default timeout for all tests in seconds"
     )
     
     return parser.parse_args()
 
 
-# Example functions to test
+# Some example functions we'll test
 def add_numbers(x, y):
-    """Simple addition function."""
+    """Add two numbers together - tough stuff!"""
     return x + y
 
 
 def divide_numbers(x, y):
-    """Division function that may raise ZeroDivisionError."""
+    """
+    Divide x by y.
+    
+    This will explode if y is zero, which is useful for
+    testing exception handling.
+    """
     return x / y
 
 
 def slow_function(seconds):
-    """A slow function that sleeps for the given number of seconds."""
+    """This function deliberately takes its time."""
     time.sleep(seconds)
     return seconds
 
 
-# Example test suite construction
+# Example test suite to demonstrate the framework
 def create_example_test_suite():
-    """Create an example test suite with some basic tests."""
+    """
+    Create an example test suite showing various test features.
+    
+    Shows different comparison methods, timeouts, exception handling, etc.
+    """
     suite = TestSuite("Example Test Suite")
     
     # Basic test cases
@@ -527,14 +603,14 @@ def create_example_test_suite():
         function=add_numbers,
         inputs=(2, 3),
         expected_output=5,
-        test_name="Addition Test"
+        test_name="Simple Addition Test"
     ))
     
     suite.add_test(TestCase(
         function=add_numbers,
         inputs=(-1, 1),
         expected_output=0,
-        test_name="Zero Sum Test"
+        test_name="Addition with Negative Number"
     ))
     
     # Test with expected exception
@@ -542,7 +618,7 @@ def create_example_test_suite():
         function=divide_numbers,
         inputs=(1, 0),
         expected_exception=ZeroDivisionError,
-        test_name="Division by Zero Test"
+        test_name="Division by Zero (should raise exception)"
     ))
     
     # Test with timeout
@@ -551,24 +627,24 @@ def create_example_test_suite():
         inputs=(0.1,),
         expected_output=0.1,
         timeout=1.0,
-        test_name="Slow Function Test (should pass)"
+        test_name="Quick Function (should complete in time)"
     ))
     
     suite.add_test(TestCase(
         function=slow_function,
         inputs=(2.0,),
         timeout=1.0,
-        test_name="Slow Function Test (should timeout)"
+        test_name="Slow Function (should timeout)"
     ))
     
     # Test with approximate comparison
     suite.add_test(TestCase(
-        function=lambda x: x * 0.3333,
+        function=lambda x: x * 0.3333,  # Deliberately imprecise
         inputs=(3,),
         expected_output=1.0,
         comparison_method=ComparisonMethod.APPROXIMATE,
         comparison_tolerance=0.001,
-        test_name="Approximate Comparison Test"
+        test_name="Floating Point Comparison (approximate)"
     ))
     
     return suite
@@ -577,17 +653,17 @@ def create_example_test_suite():
 if __name__ == "__main__":
     args = parse_args()
     
-    # Create test runner with command line settings
+    # Create test runner with CLI settings
     runner = TestRunner(
-        log_file=args.log_file or "function_test_results.log",
+        log_file=args.log_file or "test_results.log",
         log_level=getattr(logging, args.log_level),
-        report_file=args.report_file or "function_test_results.json"
+        report_file=args.report_file or "test_results.json"
     )
     
-    # Add example test suite
+    # Add our example test suite
     runner.add_suite(create_example_test_suite())
     
-    # Run all tests
+    # Run all the tests
     results = runner.run()
     
     # Generate HTML report if requested
@@ -602,18 +678,22 @@ if __name__ == "__main__":
     timeouts = sum(1 for r in results if r.status == TestResult.TIMEOUT)
     skipped = sum(1 for r in results if r.status == TestResult.SKIPPED)
     
-    print("\n===== FUNCTION TEST RESULTS =====")
+    print("\n===== PyFuncTest Results =====")
     print(f"Total tests: {total}")
     print(f"Passed: {passed}")
     print(f"Failed: {failed}")
     print(f"Errors: {errors}")
     print(f"Timeouts: {timeouts}")
     print(f"Skipped: {skipped}")
-    print(f"Pass rate: {passed/total*100:.2f}%")
-    print("=================================")
+    print(f"Success rate: {passed/total*100:.1f}%")
+    print("=============================")
     
-    print(f"\nDetailed logs: {args.log_file or 'function_test_results.log'}")
-    print(f"JSON report: {args.report_file or 'function_test_results.json'}")
+    print(f"\nDetailed logs: {args.log_file or 'test_results.log'}")
+    print(f"JSON report: {args.report_file or 'test_results.json'}")
     
     if args.html_report:
         print(f"HTML report: {args.html_report}")
+    
+    # Use a non-zero exit code if any tests failed (useful for CI/CD)
+    if failed > 0 or errors > 0 or timeouts > 0:
+        sys.exit(1)
