@@ -41,11 +41,15 @@ FastAPI service for running inferences. Currently supports:
 - `evaluation_report_generator.py`: Generates detailed PDF reports
 - `automated_feedback_loops.py`: Incorporates user feedback for continuous improvement
 
-## Roadmap (2025)
-- [ ] Add support for more recent model versions
-- [ ] Improve consensus algorithms based on early testing
-- [ ] Release benchmark results comparing single vs multi-model accuracy
-- [ ] Add more detailed legal domain examples
+## Demos
+
+CLI Tool : https://www.linkedin.com/posts/shalinianandaphd_cli-demo-for-prism-continuation-from-my-activity-7305376243787382784-rdm3?utm_source=share&utm_medium=member_desktop&rcm=ACoAAATH3cgBLB3ZhNKdiK83PyAA1KPddyaaY2I
+
+Evaluations: https://www.linkedin.com/posts/shalinianandaphd_legaltech-accesstojustice-ai-activity-7305289571565518848-xSOX?utm_source=share&utm_medium=member_desktop&rcm=ACoAAATH3cgBLB3ZhNKdiK83PyAA1KPddyaaY2I
+
+Notion page with architecture: https://www.linkedin.com/posts/shalinianandaphd_prism-proactive-retrieval-intelligence-activity-7303428785339543552-UIzc?utm_source=share&utm_medium=member_desktop&rcm=ACoAAATH3cgBLB3ZhNKdiK83PyAA1KPddyaaY2I
+
+
 
 ## Contributing
 This is a research project and we'd love your input! Feel free to open issues or PRs, especially if you have experience with:
