@@ -2,9 +2,6 @@
 logger.py - Logging configuration for the Phi-4 + PRISM system
 
 This module provides logging setup and utilities for the fusion model system.
-
-Author: AI Legal Tech Team
-Date: March 16, 2025
 """
 
 import logging
