@@ -4,8 +4,6 @@ config.py - Configuration management for Phi-4 + PRISM fusion system
 This module handles loading and validating configuration parameters
 for the fusion model system.
 
-Author: AI Legal Tech Team
-Date: March 16, 2025
 """
 
 import logging
