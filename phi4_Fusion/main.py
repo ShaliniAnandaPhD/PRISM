@@ -8,9 +8,6 @@ configures the model, and manages the inference workflow.
 Usage:
     python main.py --query "Analyze this contract for potential risks" --file contract.pdf
     python main.py --interactive --fusion-ratio 0.7 0.3
-
-Author: AI Legal Tech Team
-Date: March 16, 2025
 """
 
 import argparse
