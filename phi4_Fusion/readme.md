@@ -12,7 +12,7 @@ A system that combines Microsoft's Phi-4 general-purpose model with PRISM (Preci
 - **Citation Tracking**: Provides source citations for legal references
 - **Document Processing**: Support for PDF, Word, and HTML documents
 
-## 📋 Requirements
+##  Requirements
 
 - Python 3.9+
 - PyTorch 2.0+
@@ -33,7 +33,7 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-## 🚀 Quick Start
+##  Quick Start
 
 ```python
 from fusion import FusionModel
@@ -67,7 +67,7 @@ if "citations" in result:
         print(f"- {citation}")
 ```
 
-## 💻 Command-Line Usage
+##  Command-Line Usage
 
 ```bash
 # Basic query
@@ -80,7 +80,7 @@ phi4-prism-cli --interactive
 phi4-prism-cli --benchmark
 ```
 
-## 📊 Benchmarking
+## Benchmarking
 
 The system includes comprehensive benchmarking tools:
 
