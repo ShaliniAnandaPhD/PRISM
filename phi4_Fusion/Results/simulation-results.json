@@ -1,0 +1,334 @@
+{
+  "final_state": {
+    "stress_level": "moderate",
+    "task_type": "creative",
+    "intervention": "micro_breaks",
+    "cortisol_level": 63.2,
+    "dopamine_level": 47.8,
+    "productivity_score": 74.6,
+    "memory_efficiency": 72.3,
+    "decision_quality": 68.9,
+    "simulation_step": 10
+  },
+  "history": [
+    {
+      "step": 0,
+      "stress_level": "moderate",
+      "cortisol_level": 50.0,
+      "dopamine_level": 50.0,
+      "productivity_score": 100.0,
+      "memory_efficiency": 100.0,
+      "decision_quality": 100.0
+    },
+    {
+      "step": 1,
+      "stress_level": "moderate",
+      "cortisol_level": 57.3,
+      "dopamine_level": 46.2,
+      "productivity_score": 95.2,
+      "memory_efficiency": 93.8,
+      "decision_quality": 91.9
+    },
+    {
+      "step": 2,
+      "stress_level": "moderate",
+      "cortisol_level": 64.5,
+      "dopamine_level": 43.1,
+      "productivity_score": 88.7,
+      "memory_efficiency": 86.2,
+      "decision_quality": 85.1
+    },
+    {
+      "step": 3,
+      "stress_level": "moderate",
+      "cortisol_level": 71.2,
+      "dopamine_level": 39.6,
+      "productivity_score": 81.4,
+      "memory_efficiency": 82.7,
+      "decision_quality": 79.3
+    },
+    {
+      "step": 4,
+      "stress_level": "moderate",
+      "cortisol_level": 76.9,
+      "dopamine_level": 35.2,
+      "productivity_score": 71.8,
+      "memory_efficiency": 75.3,
+      "decision_quality": 72.5
+    },
+    {
+      "step": 5,
+      "stress_level": "moderate",
+      "cortisol_level": 73.1,
+      "dopamine_level": 38.7,
+      "productivity_score": 69.5,
+      "memory_efficiency": 73.8,
+      "decision_quality": 70.1
+    },
+    {
+      "step": 6,
+      "stress_level": "moderate",
+      "cortisol_level": 70.4,
+      "dopamine_level": 41.2,
+      "productivity_score": 71.2,
+      "memory_efficiency": 74.1,
+      "decision_quality": 69.7
+    },
+    {
+      "step": 7,
+      "stress_level": "moderate",
+      "cortisol_level": 68.2,
+      "dopamine_level": 43.9,
+      "productivity_score": 73.4,
+      "memory_efficiency": 73.7,
+      "decision_quality": 69.2
+    },
+    {
+      "step": 8,
+      "stress_level": "moderate",
+      "cortisol_level": 65.7,
+      "dopamine_level": 45.8,
+      "productivity_score": 73.9,
+      "memory_efficiency": 73.1,
+      "decision_quality": 69.0
+    },
+    {
+      "step": 9,
+      "stress_level": "moderate",
+      "cortisol_level": 63.2,
+      "dopamine_level": 47.8,
+      "productivity_score": 74.6,
+      "memory_efficiency": 72.3,
+      "decision_quality": 68.9
+    }
+  ],
+  "agent_interactions": [
+    {
+      "step": 0,
+      "interactions": [
+        {"source": "E2B", "target": "LangGraph", "strength": 0.8},
+        {"source": "OpenDevin", "target": "AutoGen", "strength": 0.5},
+        {"source": "CrewAI", "target": "CAMEL", "strength": 0.3},
+        {"source": "Haystack", "target": "LlamaIndex", "strength": 0.7}
+      ]
+    },
+    {
+      "step": 1,
+      "interactions": [
+        {"source": "E2B", "target": "OpenDevin", "strength": 0.6},
+        {"source": "AutoGen", "target": "CrewAI", "strength": 0.9},
+        {"source": "LangGraph", "target": "CAMEL", "strength": 0.4},
+        {"source": "Haystack", "target": "E2B", "strength": 0.5}
+      ]
+    },
+    {
+      "step": 2,
+      "interactions": [
+        {"source": "LangGraph", "target": "AutoGen", "strength": 0.8},
+        {"source": "CAMEL", "target": "Haystack", "strength": 0.7},
+        {"source": "LlamaIndex", "target": "OpenDevin", "strength": 0.6},
+        {"source": "E2B", "target": "CrewAI", "strength": 0.4}
+      ]
+    },
+    {
+      "step": 3,
+      "interactions": [
+        {"source": "AutoGen", "target": "Haystack", "strength": 0.7},
+        {"source": "CrewAI", "target": "LangGraph", "strength": 0.9},
+        {"source": "E2B", "target": "LlamaIndex", "strength": 0.3},
+        {"source": "CAMEL", "target": "OpenDevin", "strength": 0.5}
+      ]
+    },
+    {
+      "step": 4,
+      "interactions": [
+        {"source": "LangGraph", "target": "CrewAI", "strength": 0.8},
+        {"source": "Haystack", "target": "AutoGen", "strength": 0.6},
+        {"source": "OpenDevin", "target": "CAMEL", "strength": 0.7},
+        {"source": "LlamaIndex", "target": "E2B", "strength": 0.4}
+      ]
+    },
+    {
+      "step": 5,
+      "interactions": [
+        {"source": "E2B", "target": "CAMEL", "strength": 0.6},
+        {"source": "LangGraph", "target": "Haystack", "strength": 0.8},
+        {"source": "AutoGen", "target": "LlamaIndex", "strength": 0.7},
+        {"source": "CrewAI", "target": "OpenDevin", "strength": 0.5},
+        {"source": "LangGraph", "target": "E2B", "strength": 0.9}
+      ]
+    },
+    {
+      "step": 6,
+      "interactions": [
+        {"source": "OpenDevin", "target": "LangGraph", "strength": 0.8},
+        {"source": "CAMEL", "target": "AutoGen", "strength": 0.6},
+        {"source": "E2B", "target": "Haystack", "strength": 0.7},
+        {"source": "LlamaIndex", "target": "CrewAI", "strength": 0.5}
+      ]
+    },
+    {
+      "step": 7,
+      "interactions": [
+        {"source": "AutoGen", "target": "E2B", "strength": 0.7},
+        {"source": "LangGraph", "target": "LlamaIndex", "strength": 0.9},
+        {"source": "Haystack", "target": "CrewAI", "strength": 0.6},
+        {"source": "OpenDevin", "target": "CAMEL", "strength": 0.4}
+      ]
+    },
+    {
+      "step": 8,
+      "interactions": [
+        {"source": "LlamaIndex", "target": "Haystack", "strength": 0.8},
+        {"source": "E2B", "target": "AutoGen", "strength": 0.7},
+        {"source": "CAMEL", "target": "LangGraph", "strength": 0.6},
+        {"source": "CrewAI", "target": "OpenDevin", "strength": 0.5}
+      ]
+    },
+    {
+      "step": 9,
+      "interactions": [
+        {"source": "LangGraph", "target": "OpenDevin", "strength": 0.9},
+        {"source": "AutoGen", "target": "CAMEL", "strength": 0.7},
+        {"source": "Haystack", "target": "CrewAI", "strength": 0.6},
+        {"source": "E2B", "target": "LlamaIndex", "strength": 0.8},
+        {"source": "LangGraph", "target": "AutoGen", "strength": 0.9}
+      ]
+    }
+  ],
+  "agent_contributions": {
+    "E2B": {
+      "contributions": [
+        {"step": 0, "impact": 0.8, "area": "stress_simulation"},
+        {"step": 1, "impact": 0.7, "area": "stress_simulation"},
+        {"step": 2, "impact": 0.6, "area": "stress_simulation"},
+        {"step": 3, "impact": 0.7, "area": "stress_simulation"},
+        {"step": 4, "impact": 0.8, "area": "stress_simulation"},
+        {"step": 5, "impact": 0.7, "area": "stress_simulation"},
+        {"step": 6, "impact": 0.6, "area": "stress_simulation"},
+        {"step": 7, "impact": 0.7, "area": "stress_simulation"},
+        {"step": 8, "impact": 0.8, "area": "stress_simulation"},
+        {"step": 9, "impact": 0.7, "area": "stress_simulation"}
+      ],
+      "total_impact": 7.1
+    },
+    "OpenDevin": {
+      "contributions": [
+        {"step": 0, "impact": 0.5, "area": "workflow_optimization"},
+        {"step": 1, "impact": 0.6, "area": "workflow_optimization"},
+        {"step": 2, "impact": 0.7, "area": "workflow_optimization"},
+        {"step": 3, "impact": 0.6, "area": "workflow_optimization"},
+        {"step": 4, "impact": 0.5, "area": "workflow_optimization"},
+        {"step": 5, "impact": 0.7, "area": "workflow_optimization"},
+        {"step": 6, "impact": 0.8, "area": "workflow_optimization"},
+        {"step": 7, "impact": 0.7, "area": "workflow_optimization"},
+        {"step": 8, "impact": 0.6, "area": "workflow_optimization"},
+        {"step": 9, "impact": 0.8, "area": "workflow_optimization"}
+      ],
+      "total_impact": 6.5
+    },
+    "AutoGen": {
+      "contributions": [
+        {"step": 0, "impact": 0.7, "area": "neurochemical_dialogue"},
+        {"step": 1, "impact": 0.8, "area": "neurochemical_dialogue"},
+        {"step": 2, "impact": 0.7, "area": "neurochemical_dialogue"},
+        {"step": 3, "impact": 0.6, "area": "neurochemical_dialogue"},
+        {"step": 4, "impact": 0.7, "area": "neurochemical_dialogue"},
+        {"step": 5, "impact": 0.8, "area": "neurochemical_dialogue"},
+        {"step": 6, "impact": 0.7, "area": "neurochemical_dialogue"},
+        {"step": 7, "impact": 0.6, "area": "neurochemical_dialogue"},
+        {"step": 8, "impact": 0.7, "area": "neurochemical_dialogue"},
+        {"step": 9, "impact": 0.8, "area": "neurochemical_dialogue"}
+      ],
+      "total_impact": 7.1
+    },
+    "CrewAI": {
+      "contributions": [
+        {"step": 0, "impact": 0.6, "area": "memory_productivity"},
+        {"step": 1, "impact": 0.7, "area": "memory_productivity"},
+        {"step": 2, "impact": 0.8, "area": "memory_productivity"},
+        {"step": 3, "impact": 0.9, "area": "memory_productivity"},
+        {"step": 4, "impact": 0.8, "area": "memory_productivity"},
+        {"step": 5, "impact": 0.7, "area": "memory_productivity"},
+        {"step": 6, "impact": 0.6, "area": "memory_productivity"},
+        {"step": 7, "impact": 0.7, "area": "memory_productivity"},
+        {"step": 8, "impact": 0.8, "area": "memory_productivity"},
+        {"step": 9, "impact": 0.7, "area": "memory_productivity"}
+      ],
+      "total_impact": 7.3
+    },
+    "LangGraph": {
+      "contributions": [
+        {"step": 0, "impact": 0.9, "area": "stress_reasoning"},
+        {"step": 1, "impact": 0.8, "area": "stress_reasoning"},
+        {"step": 2, "impact": 0.7, "area": "stress_reasoning"},
+        {"step": 3, "impact": 0.8, "area": "stress_reasoning"},
+        {"step": 4, "impact": 0.9, "area": "stress_reasoning"},
+        {"step": 5, "impact": 0.8, "area": "stress_reasoning"},
+        {"step": 6, "impact": 0.7, "area": "stress_reasoning"},
+        {"step": 7, "impact": 0.8, "area": "stress_reasoning"},
+        {"step": 8, "impact": 0.9, "area": "stress_reasoning"},
+        {"step": 9, "impact": 0.8, "area": "stress_reasoning"}
+      ],
+      "total_impact": 8.1
+    },
+    "CAMEL": {
+      "contributions": [
+        {"step": 0, "impact": 0.5, "area": "stress_dialogue"},
+        {"step": 1, "impact": 0.6, "area": "stress_dialogue"},
+        {"step": 2, "impact": 0.7, "area": "stress_dialogue"},
+        {"step": 3, "impact": 0.6, "area": "stress_dialogue"},
+        {"step": 4, "impact": 0.5, "area": "stress_dialogue"},
+        {"step": 5, "impact": 0.6, "area": "stress_dialogue"},
+        {"step": 6, "impact": 0.7, "area": "stress_dialogue"},
+        {"step": 7, "impact": 0.6, "area": "stress_dialogue"},
+        {"step": 8, "impact": 0.5, "area": "stress_dialogue"},
+        {"step": 9, "impact": 0.6, "area": "stress_dialogue"}
+      ],
+      "total_impact": 5.9
+    },
+    "Haystack": {
+      "contributions": [
+        {"step": 0, "impact": 0.7, "area": "intervention_recommendation"},
+        {"step": 1, "impact": 0.6, "area": "intervention_recommendation"},
+        {"step": 2, "impact": 0.5, "area": "intervention_recommendation"},
+        {"step": 3, "impact": 0.6, "area": "intervention_recommendation"},
+        {"step": 4, "impact": 0.7, "area": "intervention_recommendation"},
+        {"step": 5, "impact": 0.8, "area": "intervention_recommendation"},
+        {"step": 6, "impact": 0.7, "area": "intervention_recommendation"},
+        {"step": 7, "impact": 0.6, "area": "intervention_recommendation"},
+        {"step": 8, "impact": 0.5, "area": "intervention_recommendation"},
+        {"step": 9, "impact": 0.6, "area": "intervention_recommendation"}
+      ],
+      "total_impact": 6.3
+    },
+    "LlamaIndex": {
+      "contributions": [
+        {"step": 0, "impact": 0.6, "area": "intervention_effectiveness"},
+        {"step": 1, "impact": 0.7, "area": "intervention_effectiveness"},
+        {"step": 2, "impact": 0.8, "area": "intervention_effectiveness"},
+        {"step": 3, "impact": 0.7, "area": "intervention_effectiveness"},
+        {"step": 4, "impact": 0.6, "area": "intervention_effectiveness"},
+        {"step": 5, "impact": 0.7, "area": "intervention_effectiveness"},
+        {"step": 6, "impact": 0.8, "area": "intervention_effectiveness"},
+        {"step": 7, "impact": 0.7, "area": "intervention_effectiveness"},
+        {"step": 8, "impact": 0.6, "area": "intervention_effectiveness"},
+        {"step": 9, "impact": 0.7, "area": "intervention_effectiveness"}
+      ],
+      "total_impact": 6.9
+    }
+  },
+  "simulation_metadata": {
+    "start_time": "2025-03-15T10:30:00Z",
+    "end_time": "2025-03-15T10:40:00Z",
+    "duration_seconds": 600,
+    "config": {
+      "stress_level": "moderate",
+      "task_type": "creative",
+      "intervention": "micro_breaks",
+      "simulation_steps": 10,
+      "agent_count": 8
+    },
+    "agents_used": ["E2B", "OpenDevin", "AutoGen", "CrewAI", "LangGraph", "CAMEL", "Haystack", "LlamaIndex"]
+  }
+}
