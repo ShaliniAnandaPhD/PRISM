@@ -5,6 +5,7 @@ This module implements the core fusion logic between Phi-4 and PRISM models
 using LoRA adapters to combine the general capabilities of Phi-4 with the
 legal domain expertise of PRISM.
 
+
 """
 
 import logging
