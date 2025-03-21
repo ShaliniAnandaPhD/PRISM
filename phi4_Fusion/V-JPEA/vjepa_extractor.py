@@ -1,3 +1,5 @@
+# Extracts V-JEPA latent representations from videos
+
 import os
 import torch
 import logging
@@ -6,6 +8,33 @@ from tqdm import tqdm
 from pathlib import Path
 from torchvision.io import read_video
 from typing import Dict, List, Optional, Union, Tuple
+
+"""
+SUMMARY:
+
+This module handles extracting V-JEPA latent representations from videos. It's responsible for:
+1. Loading videos from disk and preprocessing them for V-JEPA
+2. Running them through the V-JEPA model to extract latent features
+3. Caching the results to avoid redundant computation
+4. Batch processing multiple videos efficiently
+
+The VJEPALatentExtractor class provides a clean interface for extracting these latent
+representations, which can then be used for text generation or similarity search.
+Currently, it contains a placeholder implementation for the actual V-JEPA model,
+which would be replaced with the real model in production.
+
+TODO:
+
+- TODO: Integrate with the actual V-JEPA model implementation
+- TODO: Add support for different video preprocessing strategies
+- TODO: Implement more efficient frame sampling for long videos
+- TODO: Add support for streaming video inputs (e.g., webcams)
+- TODO: Optimize batch processing for better GPU utilization
+- TODO: Add visualization tools for understanding the extracted features
+- TODO: Implement robust error recovery for problematic videos
+- TODO: Add support for extracting features from specific video segments
+- TODO: Add memory-efficient processing for extremely large videos
+"""
 
 logger = logging.getLogger("VJEPAExtractor")
 
@@ -18,25 +47,19 @@ class VJEPALatentExtractor:
     """
     def __init__(
         self,
-        model_path: str,
-        config_path: str,
-        device: str = "cuda:0",
-        patch_size: int = 16,
-        mask_ratio: float = 0.75,
-        use_cache: bool = True,
-        cache_dir: Optional[str] = None
+        model_path: str,           # Path to the pretrained V-JEPA model weights
+        config_path: str,          # Path to the V-JEPA model configuration
+        device: str = "cuda:0",    # Device to run inference on
+        patch_size: int = 16,      # Patch size used by the V-JEPA model
+        mask_ratio: float = 0.75,  # Masking ratio for V-JEPA prediction
+        use_cache: bool = True,    # Whether to cache extracted latents
+        cache_dir: Optional[str] = None  # Directory to store cached latents
     ):
         """
         Initialize the V-JEPA latent extractor.
         
-        Args:
-            model_path: Path to the pretrained V-JEPA model weights
-            config_path: Path to the V-JEPA model configuration
-            device: Device to run inference on
-            patch_size: Patch size used by the V-JEPA model
-            mask_ratio: Masking ratio for V-JEPA prediction
-            use_cache: Whether to cache extracted latents
-            cache_dir: Directory to store cached latents
+        TODO: Add support for model quantization (int8, fp16)
+        TODO: Add support for custom preprocessing configurations
         """
         self.device = torch.device(device if torch.cuda.is_available() and "cuda" in device else "cpu")
         self.patch_size = patch_size
@@ -60,12 +83,11 @@ class VJEPALatentExtractor:
         """
         Load the V-JEPA model from disk.
         
-        Args:
-            model_path: Path to the pretrained V-JEPA model weights
-            config_path: Path to the V-JEPA model configuration
-            
-        Returns:
-            Loaded V-JEPA model
+        Note: This is a placeholder implementation that would be replaced
+        with the actual V-JEPA model loading code in production.
+        
+        TODO: Replace with actual V-JEPA model loading code
+        TODO: Add model validation and compatibility checks
         """
         # Check if files exist
         if not os.path.exists(model_path):
@@ -110,6 +132,10 @@ class VJEPALatentExtractor:
             
         Returns:
             Preprocessed video tensor [T, C, H, W]
+            
+        TODO: Add support for different resolutions
+        TODO: Add more sophisticated frame sampling strategies
+        TODO: Implement data augmentation options
         """
         if not os.path.exists(video_path):
             raise FileNotFoundError(f"Video file not found: {video_path}")
@@ -157,6 +183,10 @@ class VJEPALatentExtractor:
             
         Returns:
             Latent representation of the video
+            
+        TODO: Add options for different feature extraction methods
+        TODO: Implement partial processing for very long videos
+        TODO: Add confidence scores for extracted features
         """
         # Determine whether to use cache
         use_cache = use_cache if use_cache is not None else self.use_cache
@@ -211,6 +241,10 @@ class VJEPALatentExtractor:
             
         Returns:
             List of latent representations
+            
+        TODO: Implement true batched processing for GPU efficiency
+        TODO: Add parallel CPU preprocessing with GPU extraction
+        TODO: Support for progress callbacks
         """
         logger.info(f"Extracting latents from {len(video_paths)} videos")
         
@@ -237,3 +271,28 @@ class VJEPALatentExtractor:
         
         logger.info(f"Extracted latents from {len(latents)} videos")
         return latents
+    
+    def visualize_latent(self, latent: torch.Tensor, output_path: Optional[str] = None):
+        """
+        Create a visualization of the latent representation.
+        
+        This is a placeholder for a visualization function that would help understand
+        what the model is focusing on in the video.
+        
+        Args:
+            latent: Latent representation to visualize
+            output_path: Path to save the visualization
+            
+        TODO: Implement actual visualization capability
+        TODO: Add different visualization options (PCA, t-SNE, etc.)
+        TODO: Support for interactive visualizations
+        """
+        logger.warning("Latent visualization not yet implemented")
+        
+        # This would be replaced with actual visualization code
+        # For example:
+        # 1. Projecting the latent to a lower dimension using PCA
+        # 2. Creating a heatmap or attention map
+        # 3. Generating a report of key features
+        
+        pass
