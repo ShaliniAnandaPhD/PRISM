@@ -1,6 +1,5 @@
 """
 Video-Text FAISS Index Builder
-==============================
 
 This script builds a searchable index of video embeddings using FAISS, which enables
 efficient similarity search for the PRISM + V-JEPA system. It processes a collection
@@ -8,7 +7,7 @@ of videos, extracts their latent representations using V-JEPA, encodes them with
 our trained dual encoder model, and indexes them for fast retrieval.
 
 CURRENT STATUS:
---------------
+
 This is a bare-bones implementation for Version 1. While it creates a functional
 index, many improvements and optimizations are needed for production use.
 
@@ -408,36 +407,36 @@ def main():
 if __name__ == '__main__':
     """
     SYSTEM STATUS SUMMARY
-    =====================
+
     
     VERSION 1 CAPABILITIES:
-    ----------------------
-    ✓ Processing individual videos with V-JEPA
-    ✓ Encoding latents with dual encoder model
-    ✓ Building basic FAISS index for similarity search
-    ✓ Storing basic metadata
-    ✓ Error logging and handling
+   
+    Processing individual videos with V-JEPA
+    Encoding latents with dual encoder model
+    Building basic FAISS index for similarity search
+     Storing basic metadata
+     Error logging and handling
     
     MAJOR LIMITATIONS / TODOs:
-    -------------------------
-    ! Critical:
+
+    Critical:
       - No resumable indexing (must restart from beginning if process fails)
       - No incremental updates to existing indices
       - Limited error recovery
       
-    ! High priority:
+     High priority:
       - Batch processing not implemented (slow for large collections)
       - Basic L2 index only (not optimized for scale)
       - Limited configuration options
       - No quality evaluation of indexed results
       
-    ! Medium priority:
+     Medium priority:
       - No memory optimization for large datasets
       - Limited metadata schema
       - No distributed processing support
       
     NEXT VERSION GOALS:
-    -----------------
+   
     - Implement resumable indexing with checkpointing
     - Add support for more efficient FAISS index types
     - Add batch processing for better throughput
