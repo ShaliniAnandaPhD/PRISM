@@ -1,8 +1,34 @@
+#  Advanced model to generate text descriptions from V-JEPA latents
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from transformers import AutoModelForCausalLM, AutoConfig
+
+"""
+SUMMARY:
+
+This module implements an advanced text generation model that takes V-JEPA's latent video
+representations and generates coherent text descriptions. It works by:
+1. Taking V-JEPA latent vectors as input
+2. Projecting these vectors into the embedding space of a pretrained language model
+3. Using the language model to generate descriptive text conditioned on the video understanding
+
+The model efficiently fine-tunes just a subset of the language model's parameters,
+focusing on the connection between video understanding and language generation, which
+saves computational resources and helps prevent overfitting.
+
+TODO:
+
+- TODO: Add support for different pretrained language models (T5, BART, etc.)
+- TODO: Implement better handling of model-specific tokenization requirements
+- TODO: Add controllable generation options (e.g., style, length, format)
+- TODO: Optimize the projection layer architecture through experimentation
+- TODO: Add support for prompt-based conditioning alongside latent vectors
+- TODO: Implement proper handling of different language model architectures
+- TODO: Add attention visualization tools for interpretability
+- TODO: Add specialized legal terminology for PRISM integration
+"""
 
 class SequenceLatentToTextModel(nn.Module):
     """
@@ -14,18 +40,25 @@ class SequenceLatentToTextModel(nn.Module):
     """
     def __init__(
         self,
-        latent_dim=1024,
-        model_name="gpt2",
-        num_layers=4,
-        hidden_dim=512,
-        dropout=0.1
+        latent_dim=1024,           # Dimension of V-JEPA latent vectors
+        model_name="gpt2",         # Which pretrained language model to use
+        num_layers=4,              # How many layers to fine-tune
+        hidden_dim=512,            # Size of projection layers
+        dropout=0.1                # Dropout rate for regularization
     ):
+        """
+        Initialize the sequence generation model.
+        
+        TODO: Add model type selection for encoder-decoder vs. decoder-only
+        TODO: Add parameter validation and better error messages
+        """
         super().__init__()
         
         # Load pretrained model configuration
         self.config = AutoConfig.from_pretrained(model_name)
         
         # Create projection from V-JEPA latent space to language model embedding space
+        # This translates from "video understanding" to "language model input"
         self.latent_projector = nn.Sequential(
             nn.Linear(latent_dim, hidden_dim),
             nn.LayerNorm(hidden_dim),
@@ -37,16 +70,17 @@ class SequenceLatentToTextModel(nn.Module):
         # Load pretrained language model
         self.lm = AutoModelForCausalLM.from_pretrained(model_name)
         
-        # Freeze most of the language model weights except the last few layers
+        # Freeze most of the language model weights to save compute and avoid overfitting
         for param in self.lm.parameters():
             param.requires_grad = False
             
-        # Unfreeze the last few transformer layers for fine-tuning
+        # Unfreeze just the last few transformer layers for fine-tuning
+        # This makes training more efficient while still allowing adaptation
         for i in range(1, num_layers + 1):
             for param in self.lm.transformer.h[-i].parameters():
                 param.requires_grad = True
         
-        # Always unfreeze the language model head
+        # Always unfreeze the language model head (word prediction layer)
         for param in self.lm.lm_head.parameters():
             param.requires_grad = True
             
@@ -62,6 +96,9 @@ class SequenceLatentToTextModel(nn.Module):
             
         Returns:
             Model outputs for causal language modeling
+            
+        TODO: Add handling for different model architectures
+        TODO: Support for additional conditioning options
         """
         # Project latents to language model hidden dimension
         latent_embeddings = self.latent_projector(latents)  # [batch_size, hidden_size]
@@ -128,12 +165,16 @@ class SequenceLatentToTextModel(nn.Module):
             latents: [batch_size, latent_dim] tensor of V-JEPA latents
             max_length: Maximum length of generated sequences
             num_beams: Number of beams for beam search
-            temperature: Sampling temperature
-            top_k: Number of highest probability tokens to keep for top-k sampling
-            top_p: Cumulative probability for nucleus sampling
+            temperature: Sampling temperature (higher = more random)
+            top_k: Number of highest probability tokens to consider for sampling
+            top_p: Cumulative probability threshold for nucleus sampling
             
         Returns:
-            Generated text sequences
+            Generated token IDs
+            
+        TODO: Add support for guided generation with legal constraints
+        TODO: Implement diverse beam search for multiple descriptions
+        TODO: Add more control options (min length, repetition penalty, etc.)
         """
         batch_size = latents.shape[0]
         
