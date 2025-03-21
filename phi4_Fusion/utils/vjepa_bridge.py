@@ -1,57 +1,48 @@
-#Bridging CLASS TO v-jepa
-
 import os
 import torch
 import numpy as np
 from typing import Union
 from torchvision.io import read_video
+from sklearn.preprocessing import normalize
+import faiss
 
-# Assumes JEPA modules are locally available or pip-installed from jepa repo
-from app.vjepa import load_model_from_config, run_forward_pass
-from src.utils.visual_decoder import decode_latents_to_text  # optional text decoder
+# TODO: Ensure the following modules are correctly implemented or available
+from app.vjepa import load_model_from_config, run_forward_pass  # TODO: Verify JEPA integration
+from src.utils.visual_decoder import decode_latents_to_text      # TODO: Provide or train decoder model
 
 
 class VJEPAtoPRISM:
     """
     Bridge class to integrate V-JEPA with PRISM Fusion pipeline.
-    This class extracts latent representations from videos and optionally decodes them into natural language.
+    TODO: Extend this bridge to support batching, caching, and error handling.
     """
 
     def __init__(self, config_path: str, device: str = "cuda:0"):
         """
         Initializes V-JEPA encoder and predictor from config file.
-        
-        Args:
-            config_path: Path to JEPA YAML config file (e.g., 'configs/pretrain/vitl16.yaml')
-            device: Device to load model onto (e.g., 'cuda:0' or 'cpu')
+
+        TODO: Allow dynamic reloading or switching between JEPA variants.
         """
         self.device = torch.device(device)
-        self.model = load_model_from_config(config_path=config_path, device=self.device)
+        self.model = load_model_from_config(config_path=config_path, device=self.device)  # TODO: Test on different configs
         self.model.eval()
 
     def load_video(self, video_path: str) -> torch.Tensor:
         """
         Loads and preprocesses a video into a tensor format compatible with V-JEPA.
 
-        Args:
-            video_path: Path to video file (.mp4, .webm, etc.)
-
-        Returns:
-            video_tensor: Preprocessed video tensor with shape [T, H, W, C]
+        TODO: Add preprocessing options (resizing, frame subsampling, augmentations).
+        TODO: Handle corrupt or unsupported video formats gracefully.
         """
-        video, _, _ = read_video(video_path, pts_unit='sec')  # returns video as [T, H, W, C] uint8
-        video = video.float() / 255.0  # normalize to [0, 1]
+        video, _, _ = read_video(video_path, pts_unit='sec')  # [T, H, W, C] uint8
+        video = video.float() / 255.0  # normalize
         return video.to(self.device)
 
     def extract_latents(self, video_tensor: torch.Tensor) -> torch.Tensor:
         """
-        Runs the video tensor through V-JEPA to obtain feature-space predictions.
+        Runs the video tensor through V-JEPA to obtain latent feature predictions.
 
-        Args:
-            video_tensor: Preprocessed video tensor [T, H, W, C]
-
-        Returns:
-            latents: Feature predictions from predictor model
+        TODO: Support for masking schemes, intermediate features, and debug outputs.
         """
         with torch.no_grad():
             latents = run_forward_pass(self.model, video_tensor)
@@ -59,29 +50,46 @@ class VJEPAtoPRISM:
 
     def latents_to_text(self, latents: torch.Tensor) -> str:
         """
-        Optionally decode latent features into natural language using a trained decoder (e.g., diffusion model).
+        Decodes latent features into natural language.
 
-        Args:
-            latents: Latent tensor from V-JEPA
-
-        Returns:
-            A natural language description of the video
+        TODO: Swap decoder with retrieval-based or generative approach.
+        TODO: Optionally return confidence scores or visual reconstructions.
         """
         return decode_latents_to_text(latents)
 
     def video_to_context(self, video_path: str, as_text: bool = True) -> Union[torch.Tensor, str]:
         """
-        Master method to load video, run through V-JEPA, and return output for PRISM.
+        Full pipeline: loads a video, extracts latents, and returns either latents or summary.
 
-        Args:
-            video_path: File path to the input video
-            as_text: If True, returns a natural language summary; else returns latent tensor
-
-        Returns:
-            Either a text string or raw latent tensor
+        TODO: Add support for structured output (JSON, rich metadata).
+        TODO: Cache processed outputs to reduce redundant computation.
         """
         video_tensor = self.load_video(video_path)
         latents = self.extract_latents(video_tensor)
         if as_text:
             return self.latents_to_text(latents)
         return latents
+
+    def store_latents_in_faiss(self, latents: torch.Tensor, index: faiss.IndexFlatL2, metadata: dict):
+        """
+        Stores latent representation into FAISS index with metadata tracking.
+
+        TODO: Replace IndexFlatL2 with HNSW or PCA-based index for scalability.
+        TODO: Track ID-to-metadata mappings in persistent DB or JSON store.
+        """
+        vec = latents.cpu().numpy().reshape(1, -1)
+        vec = normalize(vec)
+        idx = index.ntotal
+        index.add(vec)
+        metadata[idx] = metadata.get("name", "unknown")  # TODO: Enhance metadata schema
+
+    def train_latent_decoder(self, training_data: list):
+        """
+        Trains a model that maps V-JEPA latent vectors to natural language descriptions.
+
+        TODO: Use contrastive loss, CLIP-style dual encoders, or seq2seq models.
+        TODO: Integrate Hugging Face training loop, evaluation metrics, and logging.
+        """
+        print("[INFO] Train a transformer or retrieval-based model to align latent → text")
+        pass  # TODO: Implement supervised or semi-supervised decoder training
+
