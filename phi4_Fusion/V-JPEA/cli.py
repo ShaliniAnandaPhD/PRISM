@@ -1,4 +1,4 @@
-#  Command-line interface for the V-JEPA to PRISM pipeline
+# Command-line interface for the V-JEPA to PRISM pipeline
 
 import os
 import sys
@@ -9,13 +9,47 @@ import json
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Optional
+from tqdm import tqdm
+from transformers import AutoTokenizer
+
+"""
+SUMMARY:
+
+This module provides a comprehensive command-line interface for the entire V-JEPA to PRISM 
+pipeline. It supports three main operations:
+1. **Extract**: Process videos with V-JEPA to extract latent representations
+2. **Generate**: Convert latent representations into text descriptions
+3. **Evaluate**: Assess the quality of generated descriptions against ground truth
+
+The CLI makes it easy to use the entire system without writing code, supporting various 
+options like batch processing, caching, and customizable generation parameters. This
+facilitates both research experiments and practical applications of the system.
+
+TODO:
+
+- TODO: Add a "pipeline" command that performs extraction, generation, and evaluation in sequence
+- TODO: Implement support for PRISM integration to perform legal reasoning
+- TODO: Add interactive mode for real-time video processing
+- TODO: Create visualization commands for understanding model behavior
+- TODO: Add support for different input/output formats (CSV, etc.)
+- TODO: Implement batch job management for large-scale processing
+- TODO: Add progress bars and better user feedback during long operations
+- TODO: Create a simple web interface alternative to the CLI
+- TODO: Add support for cloud storage sources and destinations
+"""
 
 # Import components from other files
-from config_manager import Config
-from vjepa_extractor import VJEPALatentExtractor
-from sequence_decoder import SequenceLatentToTextModel
-from dataset_loaders import get_dataset_loader
-from evaluation_metrics import TextGenerationEvaluator
+# These imports would point to the actual implementation files
+try:
+    from config_manager import Config
+    from vjepa_extractor import VJEPALatentExtractor
+    from sequence_decoder import SequenceLatentToTextModel
+    from dataset_loaders import get_dataset_loader
+    from evaluation_metrics import TextGenerationEvaluator
+except ImportError as e:
+    print(f"Error importing required modules: {e}")
+    print("Make sure all modules are in your PYTHONPATH")
+    sys.exit(1)
 
 # Set up logging
 logging.basicConfig(
@@ -28,6 +62,13 @@ logger = logging.getLogger("VJEPAtoPRISM-CLI")
 def extract_command(args):
     """
     Extract latent vectors from videos using V-JEPA.
+    
+    Args:
+        args: Command-line arguments
+        
+    TODO: Add support for different V-JEPA variants
+    TODO: Implement memory-efficient processing for large video collections
+    TODO: Add extraction validation options
     """
     logger.info("Starting latent extraction")
     
@@ -82,6 +123,13 @@ def extract_command(args):
 def generate_command(args):
     """
     Generate text descriptions from latent vectors.
+    
+    Args:
+        args: Command-line arguments
+        
+    TODO: Add support for different generation strategies
+    TODO: Implement batch generation with improved efficiency
+    TODO: Add options for controlling description style and length
     """
     logger.info("Starting text generation")
     
@@ -178,6 +226,13 @@ def generate_command(args):
 def evaluate_command(args):
     """
     Evaluate generated descriptions against ground truth.
+    
+    Args:
+        args: Command-line arguments
+        
+    TODO: Add support for more evaluation metrics
+    TODO: Implement detailed error analysis
+    TODO: Add visualization of evaluation results
     """
     logger.info("Starting evaluation")
     
@@ -254,13 +309,43 @@ def evaluate_command(args):
     
     logger.info("Evaluation complete")
 
+def prism_command(args):
+    """
+    Perform legal reasoning on generated descriptions using PRISM.
+    
+    Args:
+        args: Command-line arguments
+        
+    TODO: Implement PRISM integration
+    TODO: Add support for different legal reasoning tasks
+    TODO: Create options for different legal domains
+    """
+    logger.warning("PRISM integration not yet implemented")
+    
+    # This is a placeholder for future PRISM integration
+    # The actual implementation would:
+    # 1. Load generated descriptions
+    # 2. Process them through PRISM for legal reasoning
+    # 3. Return and save the legal analysis results
+    
+    return
+
 def main():
     """
     Main entry point for the CLI.
+    
+    TODO: Add support for configuration file generation
+    TODO: Implement subcommand help for each operation
+    TODO: Add version information and update checking
     """
     parser = argparse.ArgumentParser(description="V-JEPA to PRISM Command Line Interface")
     parser.add_argument("--config", default="config.yaml", help="Path to configuration file")
     parser.add_argument("--device", help="Device to use (e.g., 'cuda:0', 'cpu')")
+    parser.add_argument("--verbose", action="store_true", help="Enable verbose logging")
+    
+    # Setup logging level based on verbosity
+    if "--verbose" in sys.argv:
+        logging.getLogger().setLevel(logging.DEBUG)
     
     subparsers = parser.add_subparsers(dest="command", help="Command to run")
     
@@ -288,21 +373,50 @@ def main():
     evaluate_parser.add_argument("--predictions", required=True, help="Path to file with generated descriptions")
     evaluate_parser.add_argument("--references", required=True, help="Path to file with reference descriptions")
     evaluate_parser.add_argument("--output", help="Path to save evaluation results")
+    evaluate_parser.add_argument("--metrics", help="Comma-separated list of metrics to compute")
+    
+    # PRISM command (placeholder)
+    prism_parser = subparsers.add_parser("prism", help="Perform legal reasoning with PRISM")
+    prism_parser.add_argument("--descriptions", required=True, help="Path to file with descriptions")
+    prism_parser.add_argument("--output", help="Path to save legal analysis results")
+    prism_parser.add_argument("--domain", default="general", help="Legal domain for analysis")
+    
+    # Pipeline command (placeholder)
+    pipeline_parser = subparsers.add_parser("pipeline", help="Run the full pipeline")
+    pipeline_parser.add_argument("--video-dir", required=True, help="Path to directory of videos")
+    pipeline_parser.add_argument("--output-dir", required=True, help="Directory to save all outputs")
+    pipeline_parser.add_argument("--references", help="Path to reference descriptions for evaluation")
     
     args = parser.parse_args()
     
+    # Execute the appropriate command
     if args.command == "extract":
         extract_command(args)
     elif args.command == "generate":
         generate_command(args)
     elif args.command == "evaluate":
         evaluate_command(args)
+    elif args.command == "prism":
+        prism_command(args)
+    elif args.command == "pipeline":
+        logger.warning("Pipeline command not yet implemented")
+        # This would sequentially call extract, generate, (evaluate), and prism
     else:
         parser.print_help()
 
 if __name__ == "__main__":
+    """
+    Script entry point with error handling.
+    
+    TODO: Add better error reporting and recovery
+    TODO: Implement logging to both console and file
+    TODO: Add performance profiling options
+    """
     try:
         main()
+    except KeyboardInterrupt:
+        logger.info("Operation cancelled by user")
+        sys.exit(130)
     except Exception as e:
         logger.error(f"Error: {e}", exc_info=True)
         sys.exit(1)
