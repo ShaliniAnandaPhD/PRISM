@@ -1,6 +1,6 @@
 """
 Dual Encoder Training Script for V-JEPA to Text Mapping
-======================================================
+
 
 This script trains the dual encoder model that maps between V-JEPA video latents
 and text descriptions. This is a crucial component that allows us to translate 
@@ -8,7 +8,7 @@ V-JEPA's mathematical understanding of videos into human-readable descriptions
 that PRISM can use for legal reasoning.
 
 CURRENT STATUS:
---------------
+
 This is a minimal training script for Version 1. While it performs basic training,
 it lacks many features needed for production-quality model training.
 
@@ -578,38 +578,37 @@ def main():
 if __name__ == '__main__':
     """
     SYSTEM STATUS SUMMARY
-    =====================
     
     VERSION 1 CAPABILITIES:
-    ----------------------
-    ✓ Basic training loop implementation
-    ✓ Simple contrastive loss function
-    ✓ Loading dummy data for development
-    ✓ Model checkpoint saving
-    ✓ Training progress tracking
-    ✓ Basic validation metrics
+   
+     Basic training loop implementation
+     Simple contrastive loss function
+     Loading dummy data for development
+     Model checkpoint saving
+     Training progress tracking
+    Basic validation metrics
     
     MAJOR LIMITATIONS / TODOs:
-    -------------------------
-    ! Critical:
+    
+    Critical:
       - Currently using dummy data instead of real V-JEPA latents and text pairs
       - No proper model validation or selection process
       - Limited hyperparameter management
       
-    ! High priority:
+    High priority:
       - Need proper learning rate scheduling
       - Missing early stopping based on validation metrics
       - No proper visualization of training progress
       - Missing additional evaluation metrics
       
-    ! Medium priority:
+    Medium priority:
       - No mixed precision training
       - Missing gradient accumulation for larger effective batch sizes
       - No distributed training support
       - Limited data augmentation
       
     NEXT VERSION GOALS:
-    -----------------
+  
     - Implement real dataset with actual V-JEPA latents
     - Add comprehensive validation and model selection
     - Improve training speed and efficiency
