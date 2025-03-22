@@ -1,4 +1,4 @@
-(The project is ongoing and updates will be made going into January 2025 )
+(The project is ongoing and updates will be made going into 2025 )
 
 # pRISM
 *Procedural Intelligence & RAG-based Semantic Multi-Model*
