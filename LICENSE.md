@@ -11,7 +11,7 @@ This software is released under the terms of the Modified MIT License with Enhan
 1. **Enhanced Attribution Requirements**:
    - Any use, modification, or distribution of the Software must maintain this entire copyright notice, permission notice, and attribution requirements in all copies or substantial portions of the Software.
    - Any project incorporating any portion of this Software, including but not limited to functions, algorithms, methodologies, or structural elements, must prominently acknowledge its use by including the following in all relevant documentation, user interfaces, repositories, and source code files:
-     - The name of the original project: **Neuron**
+     - The name of the original project: **PRISM**
      - A link to the original repository
      - The name of the original author: **Shalini Ananda, PhD**
      - The year of creation: **2025**
