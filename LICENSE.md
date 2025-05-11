@@ -23,7 +23,7 @@ This software is released under the terms of the Modified MIT License with Enhan
 2. **Anti-Misappropriation Provisions**:
    - It is expressly prohibited to remove or obfuscate any portion of this Software to claim it as original work.
    - Any modifications to the original code must be clearly documented with date and author information.
-   - Derivative works must explicitly state they are based on **"Neuron by Shalini Ananda, PhD"** and cannot be represented as independently developed software.
+   - Derivative works must explicitly state they are based on **"PRISM by Shalini Ananda, PhD"** and cannot be represented as independently developed software.
    - Failure to comply with these provisions constitutes copyright infringement and intellectual property theft.
 
 3. **Distribution and Modification**:
