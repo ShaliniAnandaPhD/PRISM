@@ -11,10 +11,10 @@ This software is released under the terms of the Modified MIT License with Enhan
 1. **Enhanced Attribution Requirements**:
    - Any use, modification, or distribution of the Software must maintain this entire copyright notice, permission notice, and attribution requirements in all copies or substantial portions of the Software.
    - Any project incorporating any portion of this Software, including but not limited to functions, algorithms, methodologies, or structural elements, must prominently acknowledge its use by including the following in all relevant documentation, user interfaces, repositories, and source code files:
-     - The name of the original project: "Neuron"
+     - The name of the original project: **Neuron**
      - A link to the original repository
-     - The name of the original author: "Shalini Ananda, PhD"
-     - The year of creation: "2025"
+     - The name of the original author: **Shalini Ananda, PhD**
+     - The year of creation: **2025**
    - Attribution must be displayed prominently at the beginning of all documentation and in a manner no less conspicuous than other credits.
    - For user interfaces, attribution must be visible in an "About" section or equivalent.
    - For code files, attribution must be included in the header comments of each file containing or derived from the original code.
@@ -23,7 +23,7 @@ This software is released under the terms of the Modified MIT License with Enhan
 2. **Anti-Misappropriation Provisions**:
    - It is expressly prohibited to remove or obfuscate any portion of this Software to claim it as original work.
    - Any modifications to the original code must be clearly documented with date and author information.
-   - Derivative works must explicitly state they are based on "Neuron by Shalini Ananda, PhD" and cannot be represented as independently developed software.
+   - Derivative works must explicitly state they are based on **"Neuron by Shalini Ananda, PhD"** and cannot be represented as independently developed software.
    - Failure to comply with these provisions constitutes copyright infringement and intellectual property theft.
 
 3. **Distribution and Modification**:
@@ -47,6 +47,9 @@ This software is released under the terms of the Modified MIT License with Enhan
 
 6. **Academic and Research Integrity**:
    - Use of this Software in academic or research contexts requires proper citation in accordance with scientific and academic standards, in addition to the attribution requirements specified above.
-   - Any publications resulting from use of this Software must cite: "Ananda, S. (2025). Neuron."
+   - Any publications resulting from use of this Software must cite: **Ananda, S. (2025). Neuron.**
+
+---
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
